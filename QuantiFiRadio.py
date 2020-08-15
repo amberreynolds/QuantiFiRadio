@@ -43,13 +43,16 @@ def findSong(charateristics, genreData, popularity):
     #     )
     # cursor=connection.cursor()
 
-    print( type(charateristics))
-    print(charateristics)
+    # print( type(charateristics))
+    # print(charateristics)
 
     returnData = {}
     songData = pd.read_excel("Hot 100 Audio Features - cleaned.xlsx")
     #inputGenre = genreData
-    songInfo = pd.DataFrame.from_dict(charateristics)
+    finalChar = pd.DataFrame.from_dict(charateristics, orient='index')
+    finalChar = finalChar.transpose()
+    # print(finalChar)
+    songInfo = pd.DataFrame.from_dict(finalChar)
     songInfo.insert(loc=0, column="spotify_track_popularity", value=popularity)
 
     # songDataTest = songData.head().copy()
