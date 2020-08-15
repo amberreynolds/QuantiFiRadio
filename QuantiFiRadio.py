@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import psycopg2
+import config as creds
 
 # Create a function that cleans up the genre data format and compares to incoming artist genre info
 def genre_cleaner(genre):
@@ -32,6 +34,18 @@ def genreCompare(artistGenre, dbGenre):
     return float(count/len(artistGenre)*100)
 
 def findSong(charateristics, genreData, popularity):
+    # connection = psycopg2.connect(
+    #     database=creds.database,
+    #     user=creds.user,
+    #     password=creds.password,
+    #     host=creds.host,
+    #     port='5432'
+    #     )
+    # cursor=connection.cursor()
+
+    print( type(charateristics))
+    print(charateristics)
+
     returnData = {}
     songData = pd.read_excel("Hot 100 Audio Features - cleaned.xlsx")
     #inputGenre = genreData
