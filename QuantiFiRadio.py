@@ -34,8 +34,7 @@ def genreCompare(artistGenre, dbGenre):
 def findSong(charateristics, genreData, popularity):
     returnData = {}
     songData = pd.read_excel("Hot 100 Audio Features - cleaned.xlsx")
-    songData.head()
-    inputGenre = genre_cleaner(genreData)
+    #inputGenre = genreData
     songInfo = pd.DataFrame.from_dict(charateristics)
     songInfo.insert(loc=0, column="spotify_track_popularity", value=popularity)
 
@@ -115,7 +114,7 @@ def findSong(charateristics, genreData, popularity):
         tempGenre = genre_cleaner(i[1].spotify_genre)
     #print(tempGenre)
 
-    x = genreCompare(inputGenre, tempGenre)
+    x = genreCompare(genreData, tempGenre)
     if x >= 50:
         print(i[1].spotify_genre)
         print(str(x)+"%")
