@@ -144,6 +144,6 @@ def findSong(charateristics, genreData, popularity):
             print(i[1].spotify_genre)
             print(str(x)+"%")
             print(f"Performer: {i[1].Performer}\nSong: {i[1].Song}\n\n")
-            returnData.update("Artist" : {i[1].Performer, "Song" : i[1].Song, "TrackID" : i[1].spotify_track_id)
+            returnData.update({"Artist" : i[1].Performer, "Song" : i[1].Song, "TrackID" : i[1].spotify_track_id})
 
     return returnData
