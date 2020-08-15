@@ -49,6 +49,7 @@ def findSong(charateristics, genreData, popularity):
     returnData = {}
     songData = pd.read_excel("Hot 100 Audio Features - cleaned.xlsx")
     #inputGenre = genreData
+    print("Right before from_dict")
     finalChar = pd.DataFrame.from_dict(charateristics, orient='index')
     finalChar = finalChar.transpose()
     # print(finalChar)
@@ -111,14 +112,20 @@ def findSong(charateristics, genreData, popularity):
 
     # Create KMeans Model
     from sklearn.cluster import KMeans
+    print("Right before kmeans=1024")
     kmeans = KMeans(n_clusters=1024)
 
     # Train/Fit model
     kmeans.fit(XTD)
 
     # Predict
+    print("Right before predict XTD")
     predicted_clusters = kmeans.predict(XTD)
 
+    songInfo = songInfo[["spotify_track_popularity", "danceability", "energy", "key", "loudness", "mode",
+                    "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo",
+                    "time_signature"]]
+    print("Right before predict songInfo")
     predicted_songInfo = kmeans.predict(songInfo)
 
     # Assign data cluster number to new field in dataframe for the songs
@@ -128,6 +135,7 @@ def findSong(charateristics, genreData, popularity):
 
     for i in songDataCopy.iterrows():
     #temp2 = i[1].spotify_genre
+        print("Inside trying to find songs")
         tempGenre = genre_cleaner(i[1].spotify_genre)
     #print(tempGenre)
 
