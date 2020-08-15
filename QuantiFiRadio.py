@@ -114,11 +114,11 @@ def findSong(charateristics, genreData, popularity):
         tempGenre = genre_cleaner(i[1].spotify_genre)
     #print(tempGenre)
 
-    x = genreCompare(genreData, tempGenre)
-    if x >= 50:
-        print(i[1].spotify_genre)
-        print(str(x)+"%")
-        print(f"Performer: {i[1].Performer}\nSong: {i[1].Song}\n\n")
-        returnData.update({i[1].Performer : i[1].Song})
+        x = genreCompare(genreData, tempGenre)
+        if x >= 50:
+            print(i[1].spotify_genre)
+            print(str(x)+"%")
+            print(f"Performer: {i[1].Performer}\nSong: {i[1].Song}\n\n")
+            returnData.update({i[1].Performer : i[1].Song})
 
     return returnData
