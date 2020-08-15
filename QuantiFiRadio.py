@@ -39,22 +39,22 @@ def findSong(charateristics, genreData, popularity):
     songInfo = pd.DataFrame.from_dict(charateristics)
     songInfo.insert(loc=0, column="spotify_track_popularity", value=popularity)
 
-    songDataTest = songData.head().copy()
-    for i in songDataTest.iterrows():
-        temp3 = i[1].spotify_genre
-        waxC = ["[", "]", "'"]
+    # songDataTest = songData.head().copy()
+    # for i in songDataTest.iterrows():
+    #     temp3 = i[1].spotify_genre
+    #     waxC = ["[", "]", "'"]
 
-        for char in waxC:
-            temp3 = temp3.replace(char, "")
+    #     for char in waxC:
+    #         temp3 = temp3.replace(char, "")
 
-        classification3 = temp3.split(",")
-        classHolder3 = []
-        for item in classification3:
-            classHolder3.append(item.strip())
-            classification3 = classHolder3
+    #     classification3 = temp3.split(",")
+    #     classHolder3 = []
+    #     for item in classification3:
+    #         classHolder3.append(item.strip())
+    #         classification3 = classHolder3
 
-        classification3 = list( dict.fromkeys(classification3))
-        print(classification3)
+    #     classification3 = list( dict.fromkeys(classification3))
+    #     print(classification3)
 
     # Splitting Data into X and y values with Track Duration being the key for y parameter
     XTD = songData[["spotify_track_popularity", "danceability", "energy", "key", "loudness", "mode",
