@@ -46,7 +46,7 @@ def findSong(charateristics, genreData, popularity):
     # print( type(charateristics))
     # print(charateristics)
 
-    returnData = {}
+    returnData = pd.DataFrame(columns=["Artist", "Song", "TrackID"])
     songData = pd.read_excel("Resources/Hot 100 Audio Features - cleaned.xlsx")
     #inputGenre = genreData
     print("Right before from_dict")
@@ -144,6 +144,7 @@ def findSong(charateristics, genreData, popularity):
             print(i[1].spotify_genre)
             print(str(x)+"%")
             print(f"Performer: {i[1].Performer}\nSong: {i[1].Song}\n\n")
-            returnData.update({"Artist" : i[1].Performer, "Song" : i[1].Song, "TrackID" : i[1].spotify_track_id})
-
+            #returnData.update({"Artist" : i[1].Performer, "Song" : i[1].Song, "TrackID" : i[1].spotify_track_id})
+            returnData.loc[len(returnData)] = [i[1].Performer, i[1].Song, i[1].spotify_track_id]
+    print(returnData)
     return returnData
