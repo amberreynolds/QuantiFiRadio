@@ -9,6 +9,7 @@ import base64
 import datetime
 from urllib.parse import urlencode
 from spotifysearch import SpotifyAPI
+from QuantiFiRadio import findSong
 
 
 
@@ -94,11 +95,20 @@ def results():
     popularity = trackinfo["popularity"]
     genres = artistinfo["genres"]
 
-    print(type(audioinfo))
-    #audioinfo, genres and popularity gets sent to ML module
+    url = "https://open.spotify.com/track/" + song_id
+    api_key = "e149871eefa7eea1d20cb86a0ea8079d"
+
+    preview_url = f"http://api.linkpreview.net/?key={api_key}&q={url}"
+
+    r = requests.get(preview_url)
+    preview = r.json()
+  
+    nextSong = findSong(audioinfo, genres, popularity)
+    print(nextSong)
 
 
-    return render_template('results.html', audioinfo = audioinfo, artist_name = artist_name, song_name=song_name)
+
+    return render_template('results.html', preview = preview, audioinfo = audioinfo, artist_name = artist_name, song_name=song_name)
 
 if __name__ == '__main__':  
     app.run(debug=True)
