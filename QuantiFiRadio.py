@@ -146,5 +146,5 @@ def findSong(charateristics, genreData, popularity):
             print(f"Performer: {i[1].Performer}\nSong: {i[1].Song}\n\n")
 
             returnData.loc[len(returnData)] = [i[1].Performer, i[1].Song, i[1].spotify_track_id]
-    print(returnData)
+    #print(returnData)
     return returnData
