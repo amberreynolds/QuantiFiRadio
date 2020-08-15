@@ -12,6 +12,7 @@ def genre_cleaner(genre):
     waxC = ["[", "]", "'"]
 
     for char in waxC:
+        print(temp5)
         temp5 = temp5.replace(char, "")
 
     # Strip out leading spaces and convert sporify_genre data from string to array
@@ -47,6 +48,7 @@ def findSong(charateristics, genreData, popularity):
     # print(charateristics)
 
     returnData = pd.DataFrame(columns=["Artist", "Song", "TrackID"])
+    # returnData = {}
     songData = pd.read_excel("Resources/Hot 100 Audio Features - cleaned.xlsx")
     #inputGenre = genreData
     print("Right before from_dict")
@@ -135,7 +137,7 @@ def findSong(charateristics, genreData, popularity):
 
     for i in songDataCopy.iterrows():
     #temp2 = i[1].spotify_genre
-        print("Inside trying to find songs")
+        # print("Inside trying to find songs")
         tempGenre = genre_cleaner(i[1].spotify_genre)
     #print(tempGenre)
 
@@ -144,7 +146,7 @@ def findSong(charateristics, genreData, popularity):
             print(i[1].spotify_genre)
             print(str(x)+"%")
             print(f"Performer: {i[1].Performer}\nSong: {i[1].Song}\n\n")
-
+            # returnData.update({i[1].Performer : i[1].Song})
             returnData.loc[len(returnData)] = [i[1].Performer, i[1].Song, i[1].spotify_track_id]
-    #print(returnData)
+    print(returnData)
     return returnData
