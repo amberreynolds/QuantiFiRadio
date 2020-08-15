@@ -91,24 +91,14 @@ def results():
     artistinfo = spotify.artistinfo(artist_id)
 
     song_name = trackinfo["name"]
-
-    #elements needed for ML
+    popularity = trackinfo["popularity"]
     genres = artistinfo["genres"]
-    spotify_track_duration_ms = audioinfo["duration_ms"]
-    danceability = audioinfo["danceability"]
-    energy = audioinfo["energy"]
-    key = audioinfo["key"]
-    loudness = audioinfo["loudness"]
-    mode = audioinfo["mode"]
-    speechiness = audioinfo["speechiness"]
-    acousticness = audioinfo["acousticness"]
-    instrumentalness = audioinfo["instrumentalness"]
-    liveness = audioinfo["liveness"]
-    valence = audioinfo["valence"]
-    tempo = audioinfo["tempo"]
+
+    print(type(audioinfo))
+    #audioinfo, genres and popularity gets sent to ML module
 
 
-    return render_template('results.html', danceability = danceability, audioinfo = audioinfo, artist_name = artist_name, song_name=song_name)
+    return render_template('results.html', audioinfo = audioinfo, artist_name = artist_name, song_name=song_name)
 
 if __name__ == '__main__':  
     app.run(debug=True)
