@@ -6,9 +6,11 @@ from wtforms.validators import DataRequired
 import requests
 import json
 import base64
+import time
 import datetime
 from urllib.parse import urlencode
 from spotifysearch import SpotifyAPI
+import pandas as pd
 from QuantiFiRadio import findSong
 
 
@@ -102,13 +104,41 @@ def results():
 
     r = requests.get(preview_url)
     preview = r.json()
-  
-    nextSong = findSong(audioinfo, genres, popularity)
-    # print(nextSong)
+
+    nextSongs = findSong(audioinfo, genres, popularity)
+    artists = nextSongs.Artist
+    songs = nextSongs.Song
+    song_ids = nextSongs.TrackID
+
+    for i in range(0, len(song_ids)):
+        if song_ids[i] == song_id:
+            song_ids.pop(i)
+            songs.pop(i)
+            artists.pop(i)
+
+    urlList = []
+    imageList = []
+
+    if len(song_ids) == 0:
+        song_ids.append("No Results")
+        songs.append("No Results")
+        artists.append("No Results")
+        urlList.append("No Results")
+        imageList.append("https://i.gifer.com/AqDZ.gif")
+    else:
+        for song in song_ids:
+            new_url = "https://open.spotify.com/track/" + song
+            new_preview_url = f"http://api.linkpreview.net/?key={api_key}&q={new_url}"
+            new_r = requests.get(new_preview_url)
+            new_preview = new_r.json()
+            urlList.append(new_preview["url"])
+            imageList.append(new_preview["image"])
+            time.sleep(1)
+        
 
 
 
-    return render_template('results.html', preview = preview, audioinfo = audioinfo, artist_name = artist_name, song_name=song_name)
+    return render_template('results.html', artists = artists, songs = songs, song_ids = song_ids, urlList = urlList, imageList = imageList, preview = preview, audioinfo = audioinfo, artist_name = artist_name, song_name=song_name)
 
 if __name__ == '__main__':  
     app.run(debug=True)
