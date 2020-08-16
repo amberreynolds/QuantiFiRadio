@@ -87,7 +87,18 @@
       <hmd class = "col-md text-justify align-text-top">{{ (audioinfo['tempo'])|round(1) }} bpm</hmd>
     </div>
 
-
+    <div>
+      <h4 class = "col-lg type-blockquotes" style = "margin-top: 50px;">We recommend the following:<br><br></h4>
+        
+      {% for i in range(songs|length) %}
+      <h5 class = "col-lg type-blockquotes" style = "margin-bottom: 10px;">{{ songs[i]  }} by {{ artists[i] }}<br><br></h5>
+        
+      <div style = "margin-bottom: 40px;">
+          <img src="{{ imageList[i] }}"
+          width="200" height="200"><br>
+          <a href="{{ urlList[i] }}">Listen on Spotify</a>
+      </div>
+      {% endfor %}
   </div>      
 </div>
 
