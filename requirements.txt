@@ -229,7 +229,6 @@ wtforms-validators==1.0.0
 wurlitzer==2.0.0
 xlrd==1.2.0
 XlsxWriter==1.2.8
-xlwings==0.18.0
 xlwt==1.2.0
 yapf==0.28.0
 zict==2.0.0
