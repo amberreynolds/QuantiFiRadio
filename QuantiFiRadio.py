@@ -35,19 +35,20 @@ def genreCompare(artistGenre, dbGenre):
     return float(count/len(artistGenre)*100)
 
 def findSong(charateristics, genreData, popularity):
-    # connection = psycopg2.connect(
-    #     database=creds.database,
-    #     user=creds.user,
-    #     password=creds.password,
-    #     host=creds.host,
-    #     port='5432'
-    #     )
-    # cursor=connection.cursor()
+    connection = psycopg2.connect(
+        database=creds.database,
+        user=creds.user,
+        password=creds.password,
+        host=creds.host,
+        port='5432'
+        )
+    cursor=connection.cursor()
 
     # print( type(charateristics))
     # print(charateristics)
 
     returnData = pd.DataFrame(columns=["Artist", "Song", "TrackID"])
+    # print(returnData.info())
     # returnData = {}
     songData = pd.read_excel("Resources/Hot 100 Audio Features - cleaned.xlsx")
     #inputGenre = genreData
@@ -81,36 +82,6 @@ def findSong(charateristics, genreData, popularity):
                     "time_signature"]]
     # ytd = songData["spotify_track_duration_ms"].values.reshape(-1, 1)
 
-    # Splitting data into training and testing for both sets of data
-    # from sklearn.model_selection import train_test_split
-
-    # XTD_train, XTD_test, ytd_train, ytd_test = train_test_split(XTD, ytd, random_state=5)
-
-    # Scale the parameters to handle the different magnitudes measured in the dataset
-    # from sklearn.preprocessing import StandardScaler
-
-    # XTD_scaler = StandardScaler().fit(XTD_train)
-    # ytd_scaler = StandardScaler().fit(ytd_train)
-
-    # XTD_train_scaled = XTD_scaler.transform(XTD_train)
-    # XTD_test_scaled = XTD_scaler.transform(XTD_test)
-    # ytd_train_scaled = ytd_scaler.transform(ytd_train)
-    # ytd_test_scaled = ytd_scaler.transform(ytd_test)
-    
-    # # Prediction Step for the Model
-    # from sklearn.linear_model import LinearRegression
-    # model = LinearRegression()
-    # model.fit(XTD_train_scaled, ytd_train_scaled)
-
-    # predictions = model.predict(XTD_test_scaled)
-    # model.fit(XTD_train_scaled, ytd_train_scaled)
-    # plt.scatter(model.predict(XTD_train_scaled), model.predict(XTD_train_scaled) - ytd_train_scaled,  c="blue", label="Training Data")
-    # plt.scatter(model.predict(XTD_test_scaled), model.predict(XTD_test_scaled) - ytd_test_scaled,  c="orange", label="Testing Data")
-
-    # for item in XTD_test_scaled:
-    #     for value in item:
-    #         if np.isnan(value):
-    #             print(item)
 
     # Create KMeans Model
     from sklearn.cluster import KMeans
