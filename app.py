@@ -104,7 +104,7 @@ def results():
     preview = r.json()
   
     nextSong = findSong(audioinfo, genres, popularity)
-    print(nextSong)
+    # print(nextSong)
 
 
 
