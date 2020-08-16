@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import psycopg2
 import config as creds
+from sqlalchemy import create_engine
 
 # Create a function that cleans up the genre data format and compares to incoming artist genre info
 def genre_cleaner(genre):
@@ -35,14 +36,20 @@ def genreCompare(artistGenre, dbGenre):
     return float(count/len(artistGenre)*100)
 
 def findSong(charateristics, genreData, popularity):
-    connection = psycopg2.connect(
-        database=creds.database,
-        user=creds.user,
-        password=creds.password,
-        host=creds.host,
-        port='5432'
-        )
-    cursor=connection.cursor()
+    database=creds.database
+    user=creds.user
+    password=creds.password
+    host=creds.host
+    port=5432
+    engine = create_engine('postgresql+psycopg2://'+user+':'+password+'@'+host+':'+str(port)+'/'+database)
+
+    dbConnect = engine.connect()
+
+    songData = pd.read_sql("select * from \"audio_features\"", dbConnect)
+
+    songData["spotify_track_popularity"] = pd.to_numeric(songData["spotify_track_popularity"], errors='coerce')
+    songData.dropna(subset=["spotify_track_popularity"], inplace=True)
+    # print(songData.info())
 
     # print( type(charateristics))
     # print(charateristics)
@@ -50,7 +57,7 @@ def findSong(charateristics, genreData, popularity):
     returnData = pd.DataFrame(columns=["Artist", "Song", "TrackID"])
     # print(returnData.info())
     # returnData = {}
-    songData = pd.read_excel("Resources/Hot 100 Audio Features - cleaned.xlsx")
+    # songData = pd.read_excel("Resources/Hot 100 Audio Features - cleaned.xlsx")
     #inputGenre = genreData
     print("Right before from_dict")
     finalChar = pd.DataFrame.from_dict(charateristics, orient='index')
@@ -116,8 +123,8 @@ def findSong(charateristics, genreData, popularity):
         if x >= 50:
             print(i[1].spotify_genre)
             print(str(x)+"%")
-            print(f"Performer: {i[1].Performer}\nSong: {i[1].Song}\n\n")
+            print(f"Performer: {i[1].performer}\nSong: {i[1].song}\n\n")
             # returnData.update({i[1].Performer : i[1].Song})
-            returnData.loc[len(returnData)] = [i[1].Performer, i[1].Song, i[1].spotify_track_id]
+            returnData.loc[len(returnData)] = [i[1].performer, i[1].song, i[1].spotify_track_id]
     print(returnData)
     return returnData
