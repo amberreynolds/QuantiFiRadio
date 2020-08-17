@@ -85,7 +85,6 @@ def selectForm():
         artist_id = x[2]
         return redirect(url_for('results', song_id = song_id, artist=artist, artist_id = artist_id))
 
-
 @app.route('/results', methods = ['GET'])
 def results():
     song_id = str(request.args.get('song_id'))
@@ -126,11 +125,13 @@ def results():
     urlList = []
     imageList = []
 
+    no_results = "No Results"
+
     if len(song_ids) == 0:
-        song_ids.append("No Results")
-        songs.append("No Results")
-        artists.append("No Results")
-        urlList.append("No Results")
+        song_ids.append(no_results)
+        songs.append(no_results)
+        artists.append(no_results)
+        urlList.append(no_results)
         imageList.append("https://i.gifer.com/AqDZ.gif")
     else:
         for song in song_ids:
