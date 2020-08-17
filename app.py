@@ -8,7 +8,6 @@ import json
 import base64
 import time
 import datetime
-import os
 from urllib.parse import urlencode
 from spotifysearch import SpotifyAPI
 import pandas as pd
