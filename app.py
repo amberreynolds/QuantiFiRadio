@@ -107,7 +107,7 @@ def results():
 
     r = requests.get(preview_url)
     preview = r.json()
-    nextSongsWorker = q.enqueue_call(func=findSong, args=(audioinfo, genres, popularity,))
+    nextSongsWorker = q.enqueue_call(func=findSong, args=(audioinfo, genres, popularity))
     time.sleep(35)
     # print(nextSongsWorker.result)
     nextSongs = nextSongsWorker.result
