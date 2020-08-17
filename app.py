@@ -8,10 +8,14 @@ import json
 import base64
 import time
 import datetime
+import os
 from urllib.parse import urlencode
 from spotifysearch import SpotifyAPI
 import pandas as pd
 from QuantiFiRadio import findSong
+from rq import Queue
+from rq.job import Job as jb
+from worker import conn
 
 
 
@@ -25,6 +29,7 @@ client_secret = '5050b7d5bda342cba68c4bec2913d669'
 client_creds = f"{client_id}:{client_secret}"
 client_creds_b64 = base64.b64encode(client_creds.encode())
 
+q = Queue(connection=conn)
 
 class MyForm(FlaskForm):
     search = StringField('ex: Uptown Funk', validators=[DataRequired()])
@@ -104,8 +109,10 @@ def results():
 
     r = requests.get(preview_url)
     preview = r.json()
-
-    nextSongs = findSong(audioinfo, genres, popularity)
+    nextSongsWorker = q.enqueue_call(func=findSong, args=(audioinfo, genres, popularity,))
+    time.sleep(35)
+    # print(nextSongsWorker.result)
+    nextSongs = nextSongsWorker.result
     artists = nextSongs.Artist
     songs = nextSongs.Song
     song_ids = nextSongs.TrackID
