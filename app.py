@@ -31,7 +31,8 @@ client_creds_b64 = base64.b64encode(client_creds.encode())
 
 # os.system("redis-server &")
 # time.sleep(20)
-os.system("python worker.py &")
+dataReady = "Processing..."
+# os.system("python worker.py &")
 q = Queue(connection=conn)
 
 class MyForm(FlaskForm):
@@ -112,11 +113,10 @@ def results():
     r = requests.get(preview_url)
     preview = r.json()
     nextSongsWorker = q.enqueue_call(func=findSong, args=(audioinfo, genres, popularity,))
-    while True:
+    while not isinstance(nextSongsWorker.result, pd.DataFrame):
         time.sleep(5)
         print("Processing...")
-        if isinstance(nextSongsWorker.result, pd.DataFrame):
-            break
+
     # print(nextSongsWorker.result)
     nextSongs = nextSongsWorker.result
     artists = nextSongs.Artist
@@ -151,9 +151,9 @@ def results():
             time.sleep(1)
         
 
-
-
     return render_template('results.html', artists = artists, songs = songs, song_ids = song_ids, urlList = urlList, imageList = imageList, preview = preview, audioinfo = audioinfo, artist_name = artist_name, song_name=song_name)
+
+    
 
 if __name__ == '__main__':  
     app.run(debug=True)
