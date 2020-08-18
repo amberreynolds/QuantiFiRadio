@@ -15,6 +15,7 @@ from QuantiFiRadio import findSong
 from rq import Queue
 from rq.job import Job as jb
 from worker import conn
+import os
 
 
 
@@ -28,6 +29,9 @@ client_secret = '5050b7d5bda342cba68c4bec2913d669'
 client_creds = f"{client_id}:{client_secret}"
 client_creds_b64 = base64.b64encode(client_creds.encode())
 
+# os.system("redis-server &")
+# time.sleep(20)
+os.system("python worker.py &")
 q = Queue(connection=conn)
 
 class MyForm(FlaskForm):
@@ -107,8 +111,11 @@ def results():
 
     r = requests.get(preview_url)
     preview = r.json()
-    nextSongsWorker = q.enqueue_call(func=findSong, args=(audioinfo, genres, popularity))
-    time.sleep(35)
+    nextSongsWorker = q.enqueue_call(func=findSong, args=(audioinfo, genres, popularity,))
+    while True:
+        time.sleep(5)
+        if isinstance(nextSongsWorker.result, pd.DataFrame):
+            break
     # print(nextSongsWorker.result)
     nextSongs = nextSongsWorker.result
     artists = nextSongs.Artist
