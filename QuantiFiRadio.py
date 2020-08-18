@@ -92,8 +92,8 @@ def findSong(charateristics, genreData, popularity):
 
     # Create KMeans Model
     from sklearn.cluster import KMeans
-    print("Right before kmeans=1024")
-    kmeans = KMeans(n_clusters=1024)
+    print("Right before kmeans=512")
+    kmeans = KMeans(n_clusters=512)
 
     # Train/Fit model
     kmeans.fit(XTD)
