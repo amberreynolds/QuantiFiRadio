@@ -114,6 +114,7 @@ def results():
     nextSongsWorker = q.enqueue_call(func=findSong, args=(audioinfo, genres, popularity,))
     while True:
         time.sleep(5)
+        print("Processing...")
         if isinstance(nextSongsWorker.result, pd.DataFrame):
             break
     # print(nextSongsWorker.result)
