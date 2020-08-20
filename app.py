@@ -11,7 +11,8 @@ import datetime
 from urllib.parse import urlencode
 from spotifysearch import SpotifyAPI
 import pandas as pd
-from QuantiFiRadio import findSong
+# from QuantiFiRadio import findSong
+from QR_Learning_Split import findSong, calcInitial
 from rq import Queue
 from rq.job import Job as jb
 from worker import conn
@@ -42,11 +43,14 @@ class Submit(FlaskForm):
     submit = SubmitField(label = 'submit')
 
 
-
+nextSongsWorker = None
+kmeans = None
      
 @app.route("/", methods = ['GET'])
 def index():
+    global nextSongsWorker
     form = MyForm()
+    nextSongsWorker = q.enqueue_call(func=calcInitial,)
     return render_template('index.html', form = form)  
 
 @app.route("/", methods = ['POST'])
@@ -91,6 +95,8 @@ def selectForm():
 
 @app.route('/results', methods = ['GET'])
 def results():
+    global nextSongsWorker
+    print(f"Next song worker value in result is: {nextSongsWorker.result}")
     song_id = str(request.args.get('song_id'))
     artist_name = str(request.args.get('artist'))
     artist_id = str(request.args.get('artist_id'))
@@ -113,7 +119,7 @@ def results():
     r = requests.get(preview_url)
     preview = r.json()
 
-    nextSongsWorker = q.enqueue_call(func=findSong, args=(audioinfo, genres, popularity,))
+    nextSongsWorker = q.enqueue_call(func=findSong, args=(audioinfo, genres, popularity, nextSongsWorker.result[1], nextSongsWorker.result[0],))
     while not isinstance(nextSongsWorker.result, pd.DataFrame):
         time.sleep(5)
         print("Processing...")
