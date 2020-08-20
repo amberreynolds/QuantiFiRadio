@@ -96,6 +96,8 @@ def selectForm():
 @app.route('/results', methods = ['GET'])
 def results():
     global nextSongsWorker
+    while nextSongsWorker==None:
+        time.sleep(5)
     print(f"Next song worker value in result is: {nextSongsWorker.result}")
     song_id = str(request.args.get('song_id'))
     artist_name = str(request.args.get('artist'))
