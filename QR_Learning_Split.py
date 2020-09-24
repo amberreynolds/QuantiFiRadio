@@ -6,17 +6,18 @@ import config as creds
 from sqlalchemy import create_engine
 from sklearn.cluster import KMeans
 
-kmeans = KMeans(n_clusters=1024)
+kmeans = None
 songDataGlobal = pd.DataFrame()
 
 def calcInitial():
+    global kmeans
     database=creds.database
     user=creds.user
     password=creds.password
     host=creds.host
     port=5432
     engine = create_engine('postgresql+psycopg2://'+user+':'+password+'@'+host+':'+str(port)+'/'+database)
-
+    
     dbConnect = engine.connect()
 
     songData = pd.read_sql("select * from \"audio_features\"", dbConnect)
@@ -35,22 +36,25 @@ def calcInitial():
     
 
     # Train/Fit model
-    creds.kmeans.fit(XTD)
+    kmeans = KMeans(n_clusters=1024)
+    kmeans.fit(XTD)
+    print(f"KMeans is: {kmeans}")
+    print(f"KMeans type is: {type(kmeans)}")
 
     # Predict
-    print("Right before predict XTD")
-    predicted_clusters = creds.kmeans.predict(XTD)
+    print(f"Right before predict clusters = kmeans.fit(XTD) is : {kmeans.fit(XTD)}")
+    predicted_clusters = kmeans.predict(XTD)
 
     # Assign data cluster number to new field in dataframe for the songs
     songData["Cluster"] = predicted_clusters
-    creds.songDataGlobal = songData
-    print(creds.songDataGlobal.info())
+    songDataGlobal = songData
+    print(songDataGlobal.info())
+    return [songDataGlobal, kmeans]
 
 
 
 # Create a function that cleans up the genre data format and compares to incoming artist genre info
 def genre_cleaner(genre):
-    print(temp5)
     temp5 = genre
 
     # Remove the [, ], and ' characters from the spotify_genre data
@@ -79,8 +83,9 @@ def genreCompare(artistGenre, dbGenre):
                 #print(f"Incoming Genre is: {genre}\n Caegory Genre is: {item}")
     return float(count/len(artistGenre)*100)
 
-def findSong(charateristics, genreData, popularity):
-
+def findSong(charateristics, genreData, popularity, calcIResult, predictDF):
+    print(f"Start of findSong and kmeans value is: {kmeans}")
+    print(f"Start of findSong and userKmeans is: {calcIResult} ")
     returnData = pd.DataFrame(columns=["Artist", "Song", "TrackID"])
     # print(returnData.info())
     # returnData = {}
@@ -97,10 +102,10 @@ def findSong(charateristics, genreData, popularity):
                     "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo",
                     "time_signature"]]
     print("Right before predict songInfo")
-    predicted_songInfo = creds.kmeans.predict(songInfo)
+    predicted_songInfo = calcIResult.predict(songInfo)
     print(predicted_songInfo)
     print(songDataGlobal.info())
-    songDataCopy = creds.songDataGlobal.loc[creds.songDataGlobal["Cluster"] == predicted_songInfo[0]].copy()
+    songDataCopy = predictDF.loc[predictDF["Cluster"] == predicted_songInfo[0]].copy()
 
     for i in songDataCopy.iterrows():
     #temp2 = i[1].spotify_genre
@@ -115,5 +120,5 @@ def findSong(charateristics, genreData, popularity):
             print(f"Performer: {i[1].performer}\nSong: {i[1].song}\n\n")
             # returnData.update({i[1].Performer : i[1].Song})
             returnData.loc[len(returnData)] = [i[1].performer, i[1].song, i[1].spotify_track_id]
-    print(returnData)
+    print(returnData.head())
     return returnData
